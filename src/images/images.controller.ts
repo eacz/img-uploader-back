@@ -1,13 +1,23 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  UploadedFile,
+  UseInterceptors,
+} from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+
+import { fileExtensionFilter } from 'src/common/filters/file-extension.filter';
 import { ImagesService } from './images.service';
-import { CreateImageDto } from './dto/create-image.dto';
 
 @Controller('images')
 export class ImagesController {
   constructor(private readonly imagesService: ImagesService) {}
 
-  @Post()
-  create(@Body() createImageDto: CreateImageDto) {
-    return this.imagesService.create(createImageDto);
+  @Post('upload')
+  @UseInterceptors(
+    FileInterceptor('image', { fileFilter: fileExtensionFilter }),
+  )
+  create(@UploadedFile() image: Express.Multer.File) {
+    return this.imagesService.create(image);
   }
 }
