@@ -10,9 +10,7 @@ export class ImagesService {
       throw new BadRequestException('You should send an image');
     }
     const fileUploaded = await this.filesService.uploadImage(image);
-    console.log(image);
-    console.log(fileUploaded);
 
-    return fileUploaded;
+    return fileUploaded.secure_url;
   }
 }
